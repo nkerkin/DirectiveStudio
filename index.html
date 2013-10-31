@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Directive Studio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="//netdna.bootstrapcdn.com/bootswatch/3.0.0/slate/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="//airve.github.io/js/response/response.min.js"></script>
+      <![endif]-->
+    <style type="text/css">
+        /*dirty hack
+        */
+        body > .row
+        {
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+        
+        .row
+        {
+            padding: 3px;
+        }
+        
+        .form-group
+        {
+            margin-bottom: 3px;
+        }
+
+        .form-group label.control-label:after
+        {
+          font-family: FontAwesome;
+          font-weight: normal;
+          padding-left: 3px;
+          content: "\f059";
+
+        }
+
+        .form-horizontal .control-label, .form-horizontal .radio, .form-horizontal .checkbox, .form-horizontal .radio-inline, .form-horizontal .checkbox-inline
+        {
+            padding-top: 3px;
+        }
+        .form-control
+        {
+            height: 30px;
+        }
+        
+        .ace_editor {
+             height: 200px;
+        }
+
+        .popover
+        {
+          min-width: 900px
+        }
+
+        iframe
+        {
+          background-color: white;
+        }
+        /**/
+    </style>
+</head>
+<body ng-app="myApp" ng-controller="OneAndOnlyController">
+    <nav class="navbar navbar-default" role="navigation">
+        <a class="navbar-brand" href="#">Directive Studio</a>        
+        <button type="button" class="btn btn-default pull-right navbar-btn" ng-click="ShowHelp('TranslusionsAndScopes', 'Transclusions and Scope')" >Transclusions and Scope</button>
+      </nav>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label for="inputEmail1" class="col-lg-2 control-label" ng-click="ShowHelp('Module')">
+                        Module</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" placeholder="Module Name" ng-model="definition.moduleName">
+                    </div>
+                </div>
+                <div class="form-group" >
+                    <label for="" class="col-lg-2 control-label" ng-click="ShowHelp('Directive')">
+                        Directive</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" placeholder="" ng-model="definition.directiveName" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label" ng-click="ShowHelp('Restrict')">
+                        Restrict</label>
+                    <div class="col-lg-10">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default" ng-model="definition.restrict['E']"
+                                btn-checkbox>
+                                Element</button>
+                            <button type="button" class="btn btn-default" ng-model="definition.restrict['A']"
+                                btn-checkbox>
+                                Attribute</button>
+                            <button type="button" class="btn btn-default" ng-model="definition.restrict['C']"
+                                btn-checkbox>
+                                Class</button>
+                            <button type="button" class="btn btn-default" ng-model="definition.restrict['M']"
+                                btn-checkbox>
+                                Comment</button>                              
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label" ng-click="ShowHelp('Priority')">
+                        Priority</label>
+                    <div class="col-lg-2">
+                        <input type="text" class="form-control" xui-mask="9999" ng-model="definition.priority">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label" ng-click="ShowHelp('Terminal')">
+                        Terminal</label>
+                    <div class="col-lg-10">
+                        <button type="button" class="btn btn-default" ng-model="definition.terminal" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+                            Terminal
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group"  >
+                    <label for="" class="col-lg-2 control-label" ng-click="ShowHelp('Scope')">
+                        Scope</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" placeholder="" ng-model="definition.scope" ng-focus="currentField = 'scope'" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label" ng-click="ShowHelp('Template')">
+                        Template</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" placeholder="" ng-model="definition.template">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label" ng-click="ShowHelp('TemplateUrl')">
+                        Template Url</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" placeholder="" ng-model="definition.templatUrl">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label" ng-click="ShowHelp('Replace')">
+                        Replace</label>
+                    <div class="col-lg-10">
+                        <button type="button" class="btn btn-default" ng-model="definition.replace" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+                            Replace
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label" ng-click="ShowHelp('Transclude')">
+                        Transclude</label>
+                    <div class="col-lg-10">
+                         <div class="btn-group col-lg-6" >
+                            <button type="button" class="btn btn-default" ng-model="definition.restrict['E']"
+                                btn-checkbox>
+                                Element</button>
+                            <button type="button" class="btn btn-default" ng-model="definition.restrict['A']"
+                                btn-checkbox>
+                                Attribute</button>
+
+                         </div>
+                        <input type="text" class="form-control col-lg-6" placeholder="" ng-model="definition.transclude">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label" ng-click="ShowHelp('Compile')">
+                        Compile</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" placeholder="" ng-model="definition.compile">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label" ng-click="ShowHelp('Link')">
+                        Link</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" placeholder="" ng-model="definition.link">
+                    </div>
+                </div>
+                    <div class="form-group">
+                        <label for="" class="col-lg-2 control-label" ng-click="ShowHelp('Controller')">
+                            Controller</label>
+                        <div class="col-lg-10">
+                            <button type="button" class="btn btn-primary btn-block" ng-model="definition.hasController" btn-checkbox>
+                                Include
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-show="definition.hasController">  
+                        <div class="col-lg-2">
+                            
+                        </div>
+                        <div class="col-lg-10">
+                            <div ui-ace="{theme:'monokai',mode: 'javascript', showPrintMargin: false}" ng-model="definition.controller"></div>
+                        </div>
+                    </div>
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label" ng-click="ShowHelp('Require')">
+                        Require</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" placeholder="" ng-model="definition.require">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label" ng-click="ShowHelp('ControllerAs')">
+                        Controller As</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" placeholder="" ng-model="definition.controllerAs">
+                    </div>
+                </div>
+                </form>
+            </div>
+            
+            <div class="row">                
+            </div>
+        </div>
+        <div class="col-md-6">
+          <div class="row"  ng-show="showHelp">
+            <div class="panel panel-default">
+              <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left">{{currentFieldTitle}}</h3>
+                <button type="button" class="btn btn-default pull-right" ng-click="showHelp = false" >Hide Help</button>
+              </div>
+              <div class="panel-body" >     
+                <div ng-include src="currentField + '.help'"></div>       
+              </div>              
+            </div>
+          </div>
+           <div class="row">
+                <!--{{definition}}
+               <textarea class="form-control" rows="20" ng-model="renderedDirective"> </textarea>-->
+               <div ui-ace="{theme:'monokai',mode: 'javascript', showPrintMargin: false}" ng-model="renderedDirective"></div>
+            </div>
+            <div class="row">
+                <iframe id="test" height="200" width="100%" srcdoc="{{preview}}">You need a Frames Capable browser to view this content.</iframe>
+            </div>
+        </div>
+
+        <!-- Help Templates -->
+        <div> 
+            <script type="text/ng-template" id="Directive.help">
+                Name of the current scope. This attribute is optional. The default value is the name given at registration.
+            </script>
+            <script type="text/ng-template" id="Restrict.help">        
+                String of subset of EACM which restricts the directive to a specific directive declaration style. Defaults to 'A'.
+                    <ul>
+                        <li>E - Element name: &lt;my-directive&gt;&lt;/my-directive&gt;</li>
+                        <li>A - Attribute (default): &lt;div my-directive="exp"&gt; &lt;/div&gt; </li>
+                        <li>C - Class: &lt;div class="my-directive: exp;"&gt;&lt;/div&gt; </li>
+                        <li>M - Comment: &lt;!-- directive: my-directive exp --&gt; </li>
+                    </ul>        
+            </script>
+            <script type="text/ng-template" id="Priority.help">
+                When there are multiple directives defined on a single DOM element, sometimes it is necessary to specify the order in which the directives are applied. The priority is used to sort the directives before their compile functions get called. Priority is defined as a number. Directives with greater numerical priority are compiled first. The order of directives with the same priority is undefined. The default priority is 0.
+            </script>
+            <script type="text/ng-template" id="Terminal.help">
+                If set to true, the current priority will be the last set of directives executed (any directives at the current priority will still execute as the order of execution on same priority is undefined).
+            </script>
+            <script type="text/ng-template" id="Scope.help">
+                If set to:  
+            <ul><li>true - a new scope will be created for this directive. If multiple directives on the same element request a new scope, only one new scope is created. The new scope rule does not apply for the root of the template since the root of the template always gets a new scope.</li>
+                <li>{} (object hash) - a new 'isolate' scope is created. The 'isolate' scope differs from normal scope in that it does not prototypically inherit from the parent scope. This is useful when creating reusable components, which should not accidentally read or modify data in the parent scope. The 'isolate' scope takes an object hash which defines a set of local scope properties derived from the parent scope. These local properties are useful for aliasing values for templates. There are three possible binding strategies for passing data to and from the parent scope:
+                <ul>
+                    <li>@ or @attr - bind a local scope property to the value of a DOM attribute. The result is always a string since DOM attributes are strings. If no attr name is specified then the attribute name is assumed to be the same as the local name. Given <widget my-attr=\"hello {{name}}"> and widget definition of scope: { localName:'@myAttr' }, then the widget scope property localName will reflect the interpolated value of hello {{name}}. As the name attribute changes so will the localName property on the widget scope. The name is read from the parent scope (not component scope).</li>
+                    <li>= or =attr - set up bi-directional binding between a local scope property and the parent scope property with the name given as the value of the attr attribute. If no attr name is specified then the attribute name is assumed to be the same as the local name. Given <widget my-attr="parentModel"> and widget definition of scope: { localModel:'=myAttr' }, then the widget scope property localModel will reflect the value of parentModel on the parent scope. Any changes to parentModel will be reflected in localModel and vice-versa. If the parent scope property doesn't exist, a NON_ASSIGNABLE_MODEL_EXPRESSION exception will be thrown. You can avoid this behavior by using =? or =?attr, which marks the property as optional.</li>
+                    <li>& or &attr - provides a way to execute an expression in the context of the parent scope. If no attr name is specified then the attribute name is assumed to be the same as the local name. Given <widget my-attr="count = count + value"> and widget definition of scope: { localFn:'&myAttr' }, then isolate scope property localFn will point to a function wrapper for the count = count + value expression. Often it's desirable to pass data from the isolated scope via an expression and to the parent scope. This can be done by passing a map of local variable names and values into the expression wrapper function. For example, if the expression is increment(amount) then we can specify the amount value by calling the localFn as localFn({amount: 22}).</li>
+                </ul></li>
+            </ul>
+            </script>
+            <script type="text/ng-template" id="Controller.help">
+                Controller constructor function. The controller is instantiated before the pre-linking phase and it is shared with other directives (see the require attribute). This allows the directives to communicate with each other and augment each other's behavior. The controller is injectable (and supports bracket notation) with the following locals:
+
+                <ul>
+                    <li>$scope - Current scope associated with the element</li>
+                    <li>$element - Current element</li>
+                    <li>$attrs - Current attributes object for the element</li>
+                    <li>$transclude - A transclude linking function pre-bound to the correct transclusion scope: function(cloneLinkingFn).</li>                    
+                </ul>
+
+            </script>
+            <script type="text/ng-template" id="ControllerAs.help">
+                Creates a controller alias in the directive scope so it can be referenced in the directive template. The directive must define a scope for this configuration to be used. This attribute is useful when the directive is used as a component.
+            </script>
+            <script type="text/ng-template" id="Template.help">
+             Replace the current element with the contents of the given HTML. The replacement process migrates all of the attributes / classes from the old element to the new one. See the Creating Components section below for more information.
+             You can specify template as a string representing the template or as a function which takes two arguments tElement and tAttrs (described in the compile function api below) and returns a string value representing the template.
+            </script>
+            <script type="text/ng-template" id="TemplateUrl.help">
+                Same as template but the template is loaded from the specified URL. Because the template loading is asynchronous, the compilation/linking is suspended until the template is loaded.
+
+                You can specify templateUrl as a string representing the URL or as a function which takes two arguments tElement and tAttrs (described in the compile function api below) and returns a string value representing the url. In either case, the template URL is passed through $sce.getTrustedResourceUrl.
+            </script>
+            <script type="text/ng-template" id="Replace.help">
+                Specify where the template should be inserted. Defaults to false.
+                <ul>
+                    <li>true - the template will replace the current element.</li>
+                    <li>false - the template will replace the contents of the current element.</li>
+                </ul>
+            </script>
+            <script type="text/ng-template" id="Transclude.help">
+
+                Compile the content of the element and make it available to the directive. Typically used with ngTransclude. The advantage of transclusion is that the linking function receives a transclusion function which is pre-bound to the correct scope. In a typical setup the widget creates an isolate scope, but the transclusion is a sibling (rather than a child) of the isolate scope. This makes it possible for the widget to have private state, and the transclusion to be bound to the parent (pre-isolate) scope.
+                <ul>
+                    <li>true - transclude the content of the directive.</li>
+                    <li>'element' - transclude the whole element including any directives defined at lower priority.</li>
+                </ul>
+            </script>
+            <script type="text/ng-template" id="Compile.help">                  
+                <p>The compile function deals with transforming the template DOM. Since most directives do not transform
+                the template, it is not used often. Examples that require compile functions are
+                directives that transform template DOM (such as <a href="http://docs.angularjs.org/guide/api/ng.directive:ngRepeat"><code>ngRepeat</code></a>), or that load the contents
+                asynchronously (such as <a href="http://docs.angularjs.org/guide/api/ngRoute.directive:ngView">ngView</a>). The
+                compile function takes the following arguments:</p>
+                <ul>
+                <li><p><code>tElement</code> - template element - The element where the directive has been declared. It is
+                safe to do template transformation on the element and child elements only.</p>
+                </li>
+                <li><p><code>tAttrs</code> - template attributes - Normalized list of attributes declared on this element shared
+                between all directive compile functions. See <a href="http://docs.angularjs.org/guide/guide/directive#writing-directives_attributes">Attributes</a>.</p>
+                </li>
+                <li><p><code>transclude</code> - A transclude linking function: <code>function(scope, cloneLinkingFn)</code>.</p>
+                </li>
+                </ul>
+                <p>NOTE: The template instance and the link instance may not be the same objects if the template has
+                been cloned. For this reason it is not safe to do anything in the compile function other than DOM
+                transformation that applies to all DOM clones. Specifically, DOM listener registration should be
+                done in a linking function rather than in a compile function.</p>
+                <p>A compile function can have a return value which can be either a function or an object. Returning a
+                (post-link) function is equivalent to registering the linking function via the link property of
+                the config object when the compile function is empty. Returning an object with function(s) registered
+                via <code>pre</code> and <code>post</code> properties allows you to control when a linking function should be called during
+                the linking phase. See info about pre-linking and post-linking functions below.</p>
+            </script>
+            <script type="text/ng-template" id="Link.help">
+                This property is used only if the compile property is not defined.
+
+                <p>The link function is responsible for registering DOM listeners as well as updating the DOM. It is
+                executed after the template has been cloned. This is where most of the directive logic will be
+                put.</p>
+                <ul>
+                <li><p><code>scope</code> - <a href="http://docs.angularjs.org/guide/api/ng.$rootScope.Scope"><code>Scope</code></a> - The scope to be used by the
+                directive for registering <a href="http://docs.angularjs.org/guide/api/ng.$rootScope.Scope#methods_$watch"><code>watches</code></a>.</p>
+                </li>
+                <li><p><code>iElement</code> - instance element - The element where the directive is to be used. It is safe to
+                manipulate the children of the element only in <code>postLink</code> function since the children have
+                already been linked.</p>
+                </li>
+                <li><p><code>iAttrs</code> - instance attributes - Normalized list of attributes declared on this element shared
+                between all directive linking functions. See <a href="http://docs.angularjs.org/guide/guide/directive#writing-directives_attributes">Attributes</a>.</p>
+                </li>
+                <li><p><code>controller</code> - a controller instance - A controller instance if at least one directive on the
+                element defines a controller. The controller is shared among all the directives, which allows
+                the directives to use the controllers as a communication channel.</p>
+                </li>
+                </ul>
+                <h4 id="writing-directives_linking-function_pre-linking-function">Pre-linking function</h4>
+                <p>Executed before the child elements are linked. Not safe to do DOM transformation since the
+                compiler linking function will fail to locate the correct elements for linking.</p>
+                <h4 id="writing-directives_linking-function_post-linking-function">Post-linking function</h4>
+                <p>Executed after the child elements are linked. It is safe to do DOM transformation in the post-linking function.</p>
+                <p><a name="Attributes"></a></p>
+                <h3 id="writing-directives_attributes">Attributes</h3>
+                <p>The <a href="http://docs.angularjs.org/guide/api/ng.$compile.directive.Attributes"><code>Attributes</code></a> object - passed as a parameter in the
+                link() or compile() functions - is a way of accessing:</p>
+                <ul>
+                <li><p><em>normalized attribute names:</em> Since a directive such as 'ngBind' can be expressed in many ways
+                such as 'ng:bind', or 'x-ng-bind', the attributes object allows for normalized access to
+                the attributes.</p>
+                </li>
+                <li><p><em>directive inter-communication:</em> All directives share the same instance of the attributes
+                object which allows the directives to use the attributes object as inter directive
+                communication.</p>
+                </li>
+                <li><p><em>supports interpolation:</em> Interpolation attributes are assigned to the attribute object
+                allowing other directives to read the interpolated value.</p>
+                </li>
+                <li><p><em>observing interpolated attributes:</em> Use <code>$observe</code> to observe the value changes of attributes
+                that contain interpolation (e.g. <code>src="{{bar}}"</code>). Not only is this very efficient but it's also
+                the only way to easily get the actual value because during the linking phase the interpolation
+                hasn't been evaluated yet and so the value is at this time set to <code>undefined</code>.</p>
+                </li>
+                </ul>
+                <pre class="prettyprint linenums">function linkingFn(scope, elm, attrs, ctrl) {
+                // get the attribute value
+                console.log(attrs.ngModel);
+
+                // change the attribute
+                attrs.$set('ngModel', 'new value');
+
+                // observe changes to interpolated attribute
+                attrs.$observe('ngModel', function(value) {
+                console.log('ngModel has changed value to ' + value);
+                });
+                }
+                </pre>
+            </script>
+            <script type="text/ng-template" id="Require.help">
+                Require another directive and inject its controller as the fourth argument to the linking function. The require takes a string name (or array of strings) of the directive(s) to pass in. If an array is used, the injected argument will be an array in corresponding order. If no such directive can be found or if the directive does not have a controller, then an error is raised. The name can be prefixed with:
+                        <ul>
+                            <li>(no prefix) - Locate the required controller on the current element.</li>
+                            <li>? - Attempt to locate the required controller, or return null if not found.</li>
+                            <li>^ - Locate the required controller by searching the element's parents.</li>
+                            <li>?^ - Attempt to locate the required controller by searching the element's parents, or return null if not found.</li>
+                        </ul>                    
+            </script>
+            <script type="text/ng-template" id="Module.help">
+                Name of the Module.'
+            </script>
+            <script type="text/ng-template" id="TranslusionsAndScopes.help">
+                <p>It is often desirable to have reusable components. Below is pseudo-code showing how a simplified
+                dialog component may work.</p>
+                <pre class="prettyprint linenums">  
+                    &lt;div&gt;
+                        &lt;button ng-click="show=true"&gt;show&lt;/button&gt;
+                        &lt;dialog title="Hello {{username}}."
+                                visible="show"
+                                on-cancel="show = false"
+                                on-ok="show = false; doSomething()"&gt;
+                           Body goes here: {{username}} is {{title}}.
+                        &lt;/dialog&gt;
+                    &lt;/div&gt;
+                </pre>
+                <p>Clicking on the "show" button will open the dialog. The dialog will have a title, which is
+                data bound to <code>username</code>, and it will also have a body which we would like to transclude
+                into the dialog.</p>
+                <p>Here is an example of what the template definition for the <code>dialog</code> widget may look like.</p>
+                <pre class="prettyprint linenums">  
+                    &lt;div ng-show="visible"&gt;
+                        &lt;h3&gt;{{title}}&lt;/h3&gt;
+                        &lt;div class="body" ng-transclude&gt;&lt;/div&gt;
+                        &lt;div class="footer"&gt;
+                          &lt;button ng-click="onOk()"&gt;Save changes&lt;/button&gt;
+                          &lt;button ng-click="onCancel()"&gt;Close&lt;/button&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                </pre>
+                <p>This will not render properly, unless we do some scope magic.</p>
+                <p>The first issue we have to solve is that the dialog box template expects <code>title</code> to be defined, but
+                the place of instantiation would like to bind to <code>username</code>. Furthermore the buttons expect the
+                <code>onOk</code> and <code>onCancel</code> functions to be present in the scope. This limits the usefulness of the
+                widget. To solve the mapping issue we use the <code>locals</code> to create local variables which the template
+                expects as follows:</p>
+                <pre class="prettyprint linenums">  
+                    scope: {
+                        title: '@',             // the title uses the data-binding from the parent scope
+                        onOk: '&amp;',              // create a delegate onOk function
+                        onCancel: '&amp;',          // create a delegate onCancel function
+                        visible: '='            // set up visible to accept data-binding
+                    }
+                </pre>
+                <p>Creating local properties on widget scope creates two problems:</p>
+                <ol>
+                <li><p>isolation - if the user forgets to set <code>title</code> attribute of the dialog widget the dialog
+                template will bind to parent scope property. This is unpredictable and undesirable.</p>
+                </li>
+                <li><p>transclusion - the transcluded DOM can see the widget locals, which may overwrite the
+                properties which the transclusion needs for data-binding. In our example the <code>title</code>
+                property of the widget clobbers the <code>title</code> property of the transclusion.</p>
+                </li>
+                </ol>
+                <p>To solve the issue of lack of isolation, the directive declares a new <code>isolated</code> scope. An
+                isolated scope does not prototypically inherit from the child scope, and therefore we don not have
+                to worry about accidentally clobbering any properties.</p>
+                <p>However <code>isolated</code> scope creates a new problem: if a transcluded DOM is a child of the widget
+                isolated scope then it will not be able to bind to anything. For this reason the transcluded scope
+                is a child of the original scope, before the widget created an isolated scope for its local
+                variables. This makes the transcluded and widget isolated scope siblings.</p>
+                <p>This may seem to be unexpected complexity, but it gives the widget user and developer the least
+                surprise.</p>
+                <p>Therefore the final directive definition looks something like this:</p>
+                <pre class="prettyprint linenums">
+                    transclude: true,
+                    scope: {
+                        title: '@',             // the title uses the data-binding from the parent scope
+                        onOk: '&amp;',              // create a delegate onOk function
+                        onCancel: '&amp;',          // create a delegate onCancel function
+                        visible: '='            // set up visible to accept data-binding
+                    },
+                    restrict: 'E',
+                    replace: true
+                </pre>
+            </script>
+            <script type="text/ng-template" id="empty.help">
+                    
+            </script>
+        </div>
+
+
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <!--<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>-->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.01/ace.js" charset="utf-8"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+    <script src="//rawgithub.com/angular-ui/ui-ace/master/ui-ace.js"></script>
+    <script src="//rawgithub.com/angular-ui/ui-utils/gh-pages/build/ui-utils.min.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.2.1/lodash.min.js"></script>
+    <script src="beautify.js"></script>
+
+    <script src="ui-bootstrap.min.js"></script>
+    <script type="text/javascript">
+        var app = angular.module('myApp', ['ui.bootstrap', 'ui.inflector', 'ui.mask', 'ui.ace']);
+
+        function OneAndOnlyController($scope, $filter, $timeout) {
+            //alert('load');
+            $scope.showHelp = false;
+            $scope.currentField = 'Directive';
+            
+            $scope.ShowHelp = function(desc, title)
+            {
+              $scope.showHelp = true;
+              $scope.currentField = desc;
+              $scope.currentFieldTitle = title ? title : desc;
+            }
+
+            $scope.renderedDirective = "";
+            $scope.definition = {
+                moduleName:"crap",
+                directiveName:"test",
+                restrict: { 'A': true},
+                terminal: 0,
+                hasController : true,
+                controller : 'function($scope, $element, $attrs, $transclude){\n}'
+            };
+
+            $timeout(function() {
+              $scope.definition.hasController = false;
+              //$scope.definition.controller = 'function($scope, $element, $attrs, $transclude){\n}';
+            }, 150);
+
+            $scope.$watch('definition', function () {
+                var rt = renderTemplate;
+                var def = $scope.definition;
+                rt = rt.replace(/MODULE_VAL/g, $filter('inflector')(def.moduleName,'underscore'));
+                rt = rt.replace(/DIRECTIVE_VAL/g, def.directiveName);
+
+                var props = [];
+                
+                //Restrict
+                var restrict = _.chain(def.restrict).pick(function(v) { return v; }).keys().value().join('');
+                if (restrict.length != 0 && restrict != "A")
+                    props.push("restrict :'" + restrict + "'");
+
+                //priority
+                if(def.priority && def.priority != "0" )
+                    props.push("priority:" + def.priority );
+
+                //Terminal
+                if(def.terminal == 1)
+                    props.push("terminal: true");
+
+                //replace
+                if(def.replace && def.replace != "0" )
+                    props.push("replace:" + def.replace );
+                //Template
+                if(def.template)
+                  props.push("template: '" + def.template + "'");
+
+                //controller
+                if (def.hasController) 
+                  props.push("controller :" + def.controller);
+
+                rt = rt.replace(/PROPERTIES_VAL/g, props.join(',') );
+                
+                $scope.renderedDirective = js_beautify(rt);
+                $scope.preview = previewTemplate.replace(/DIRECTIVE_VAL/g, $scope.renderedDirective);
+
+            }, true);
+
+        }
+
+
+        var renderTemplate =
+            "angular.module('MODULE_VAL', [])\n" +
+                ".directive('DIRECTIVE_VAL', function() {\n" +
+                "\treturn {" + 
+                " PROPERTIES_VAL" +
+             "\n};})";
+        var previewTemplate = 
+        "<html><head> <style type='text/css'>  </style> </head><body ng-app='crap'> <div test> </div><script src=\"//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js\"><\/script> <script type=\"text/javascript\"> DIRECTIVE_VAL <\/script> </body></html>";
+       
+    </script>
+</body>
+</html>
