@@ -1,0 +1,1 @@
+# Simple Angular.js Directive Generator
